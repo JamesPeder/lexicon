@@ -159,7 +159,7 @@ async function saveRow(btn) {
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
-        if (value !== "") data[key] = value;
+        if (value !== "" || (key !== 'id' && key !== 'created_at')) data[key] = value;
     });
 
     const key = Object.keys(data).includes('word') ? 'word'
