@@ -110,18 +110,20 @@ endfor %}
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
     )[:max_rows_to_show] %}
-`{{ preposition.word }}` - *{{ preposition.translation }}*{% if preposition.comment %}
-    
+`{{ preposition.word }}` - *{{ preposition.translation }}*
+{% 
+    if preposition.comment %}
 *{{ preposition.comment }}*
-{% endif %}
-{% set preposition_examples = examples.get(('prepositions', preposition.id)) %}{% if preposition_examples %}{% for preposition_example in (
-    preposition_examples
-    | sort(attribute='created_at', reverse=True)
-    )[:max_examples_to_show] %}
-- `{{ preposition_example.example_text }}`{% if preposition_example.translation %}
-    
-    *{{ preposition_example.translation }}*{% endif %}{% if preposition_example.comment %} - {{ preposition_example.comment }}
-{% endif %}{% endfor %}{% endif %}
+{%  endif %}
+{% set preposition_examples = examples.get(('prepositions', preposition.id)) %}{% 
+    if preposition_examples %}{% 
+        for preposition_example in (
+            preposition_examples
+            | sort(attribute='created_at', reverse=True)
+        )[:max_examples_to_show] %}
+{{          render_example(preposition_example) }}{% 
+        endfor %}{% 
+    endif %}
 {% endfor %}
 
 ## Numbers
