@@ -8,18 +8,21 @@ set max_examples_to_show = 3
 macro render_example(example) -%}
 - `{{ example.example_text }}`
     {% if example.translation %}    
-    *{{ example.translation }}*{% endif %}{% if example.comment %} - {{ example.comment }}
-{% endif %}{%- endmacro %}
+    *{{ example.translation }}*{% endif %}{% if example.comment %} - {{ example.comment }}{% 
+    endif %}{%- 
+endmacro %}
 
 ##  Adverbs / Adjectives 
 {% 
-set sorted_adverb_adjectives = tables.adverbs_adjectives 
+set sorted_adverb_adjectives = (
+    tables.adverbs_adjectives 
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
+    )[:max_rows_to_show]
  %}
 | Greek | Translation | Comment |
 |-------|-------------|---------|
-{% for adverb_adjective in sorted_adverb_adjectives[:max_rows_to_show] 
+{% for adverb_adjective in sorted_adverb_adjectives 
 %}| `{{ adverb_adjective.adjective_male }}` | *{{ adverb_adjective.translation }}* | {{ adverb_adjective.comment }} |
 {% endfor %}{% 
 
@@ -31,7 +34,7 @@ for adverb_adjective in sorted_adverb_adjectives %}{%
         for example in adverb_examples | sort(attribute='created_at', reverse=True) %}{% 
             if var.examples_count < max_examples_to_show %}{% 
                 if var.examples_count == 0 %}
-## Examples:
+### Examples:
 {%              endif %}
 {{ render_example(example) }}
 {%              set var.examples_count = var.examples_count + 1 %}{% 
@@ -42,15 +45,33 @@ endfor %}
 
 
 ## Verbs
-
-| Greek | Translation | Comment |
-|-------|-------------|---------|
-{% for verb in (
+{% set sorted_verbs = (
     tables.verbs
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
-    )[:max_rows_to_show] %}| `{{ verb.word }}` | *{{ verb.translation }}* | {{ verb.comment }} |
-{% endfor %}
+    )[:max_rows_to_show] 
+%}
+| Greek | Translation | Comment |
+|-------|-------------|---------|
+{% for verb in sorted_verbs %}| `{{ verb.word }}` | *{{ verb.translation }}* | {{ verb.comment }} |
+{% endfor %}{%
+
+set var = namespace(examples_count=0) 
+%}{% 
+for verb in sorted_verbs %}{% 
+    set verb_examples = examples.get(('verbs', verb.id)) %}{% 
+    if verb_examples %}{% 
+        for example in verb_examples | sort(attribute='created_at', reverse=True) %}{% 
+            if var.examples_count < max_examples_to_show %}{% 
+                if var.examples_count == 0 %}
+### Examples:
+{%              endif %}
+{{ render_example(example) }}
+{%              set var.examples_count = var.examples_count + 1 %}{% 
+            endif %}{% 
+        endfor %}{% 
+    endif %}{% 
+endfor %}
 
 
 ## Nouns
