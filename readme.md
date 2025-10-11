@@ -2,6 +2,17 @@
 
 Welcome to the Greek notebook.
 
+This app runs on python flask. Run the main.py to start.
+A sqllite database will be created. You can also edit the sql script to match the fields you would like to include for your database.
+You can add words and phrases to the database over the manage endpoint `http://127.0.0.1:5000/manage`, which acts as a datbase management GUI.
+
+The APIs to update the Database are kept general, so there should be no issues with custom tables etc. Only some minor enum tweaks would be necessary.
+
+Every time a word is added, edited or deleted, the markdown file is updated. This file contains words that you have marked as the most difficult for you to remember. Once you get used to these words, you can decrease the perceived difficulty of a word, meaning other words will be shownw to you over the markdown file.
+
+You can also edit the markdown.md file template to include other notes, or include data from the database tables in additional ways, than already included. This project uses the jinja templating language, so is easily extensible for note taking etc. The data is included in the preview.md file, once a render is triggered by the API or over the management GUI.  
+
+
 ## Rerendering the notebook preview
 
 ```
