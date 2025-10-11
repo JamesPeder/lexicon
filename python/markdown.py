@@ -9,7 +9,9 @@ TABLES = [
     "adverbs_adjectives",
     "nouns",
     "verbs",
-    "numbers"
+    "numbers",
+    "prepositions",
+    "examples"
 ]
 
 def render_markdown():
@@ -29,13 +31,19 @@ def render_markdown():
                 row_dict = {k: (v if v is not None else "") for k, v in dict(row).items()}
                 table_data.append(row_dict)
             all_data[table] = table_data
-
+    
+    # Create separate example map for efficieny look-up
+    examples = {}
+    for ex in all_data['examples']:
+        key = (ex["table_name"], ex["word_id"])
+        examples.setdefault(key, []).append(ex)
+        
     # 2. Set up Jinja2
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template(TEMPLATE_PATH)
 
     # 3. Render template with all table data
-    output_md = template.render(tables=all_data)
+    output_md = template.render(tables=all_data, examples=examples)
 
     # 4. Write output
     with open(OUTPUT_PATH, "w") as f:

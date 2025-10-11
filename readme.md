@@ -69,6 +69,30 @@ curl -X POST http://127.0.0.1:5000/word -H "Content-Type: application/json" -d '
 }'
 ```
 
+### Prepositions
+```
+curl -X POST http://127.0.0.1:5000/word -H "Content-Type: application/json" -d '{
+  "table": "prepositions",
+  "key": "word",
+  "data": {
+    "word": "πάνω",
+    "translation": "on"
+  }                         
+}'
+```
+
+### Examples
+```
+curl -X POST http://127.0.0.1:5000/word -H "Content-Type: application/json" -d '{
+  "table": "examples",
+  "data": {
+    "table_name": "prepositions",
+    "word_id": 1,
+    "example_text": "Το παιδί είναι πάνω σε ένα ξύλινο άλογο"
+  }                         
+}'
+```
+
 
 ## Deleting
 

@@ -2,6 +2,7 @@
 # Greek
 
 {% set max_rows_to_show = 10 %}
+{% set max_examples_to_show = 2 %}
 
 ##  Adverbs / Adjectives
 
@@ -41,12 +42,19 @@
 
 ## Preposition
 
-`πάνω` - *on*
-
-Εxample: *Το παιδί είναι πάνω σε ένα ξύλινο άλογο*
-
-`Πίσω` - *behind*
-
+{% for preposition in (
+    tables.prepositions
+    | sort(attribute='created_at', reverse=True)
+    | sort(attribute='difficulty', reverse=True)
+    )[:max_rows_to_show] %}`{{ preposition.word }}` - *{{ preposition.translation }}*{% if preposition_examples %}
+{{ preposition.comment }}
+{% endif %}{% set preposition_examples = examples.get(('prepositions', preposition.id)) %}{% if preposition_examples %}{% for preposition_examples in (
+    preposition_examples
+    | sort(attribute='created_at', reverse=True)
+    )[:max_examples_to_show] %}
+- {{ preposition_examples.example_text }}
+{% endfor %}{% endif %}
+{% endfor %}
 
 ## Numbers
 
