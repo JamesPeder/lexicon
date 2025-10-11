@@ -125,9 +125,11 @@ def list_entries():
     except sqlite3.Error as e:
         return Response(json.dumps({"error": f"Database error: {str(e)}"}, ensure_ascii=False, indent=4), 
                         mimetype="application/json", status=500)
+
+    
 @app.route("/manage", methods=["GET"])
 def manage():
-    """HTML interface to view, edit, delete, search, and re-render words."""
+    """HTML interface to view, edit, delete, search, and re-render words with paging."""
     return """
 <!DOCTYPE html>
 <html lang="en">
@@ -160,16 +162,31 @@ def manage():
         <option value="numbers">numbers</option>
         <option value="adverbs_adjectives">adverbs_adjectives</option>
     </select>
-    <button onclick="loadTable()">🔄 Reload Table</button>
+    <button onclick="loadTable()">🔄 Refresh</button>
     <button onclick="addRow()">➕ Add New Row</button>
     <button onclick="rerender()">🔁 Re-render Markdown</button>
+
+    Page size:
+    <select id="pageSize" onchange="changePageSize(this.value)">
+        <option>10</option>
+        <option>25</option>
+        <option>50</option>
+        <option>100</option>
+    </select>
+
+    <button onclick="prevPage()">⬅️ Prev</button>
+    <span id="pageInfo">Page 1</span>
+    <button onclick="nextPage()">➡️ Next</button>
 </div>
 
 <div id="tableData"></div>
 
 <script>
 let currentTable = "";
-let tableData = []; // cache of current table
+let tableData = [];    // full data from backend
+let filteredData = []; // filtered by search
+let currentPage = 1;
+let pageSize = 10;
 
 async function loadTable() {
     currentTable = document.getElementById('table').value;
@@ -177,49 +194,83 @@ async function loadTable() {
 
     try {
         const response = await fetch(`/words?table=${currentTable}`);
-        const data = await response.json();
-
-        tableData = data; // store globally for filtering
-
-        if (data.length === 0) {
-            document.getElementById('tableData').innerHTML = '<p>No entries found.</p>';
-            return;
-        }
-
-        renderTable(data);
+        tableData = await response.json();
+        filteredData = tableData.slice();
+        currentPage = 1;
+        renderTablePage();
     } catch (err) {
-        document.getElementById('tableData').innerHTML = `<p style="color:red;">Error loading data: ${err}</p>`;
+        document.getElementById('tableData').innerHTML = `<p style="color:red;">Error: ${err}</p>`;
     }
 }
 
-function renderTable(data) {
-    let html = '<table><thead><tr>';
-    const keys = Object.keys(data[0]);
-    keys.forEach(key => html += `<th>${key}</th>`);
-    html += '<th>Actions</th></tr>';
+function renderTablePage() {
+    const tbodyStart = (currentPage - 1) * pageSize;
+    const tbodyEnd = tbodyStart + pageSize;
+    const pageData = filteredData.slice(tbodyStart, tbodyEnd);
 
-    // 🔍 Add search filter inputs
-    html += '<tr id="filterRow">';
-    keys.forEach(k => {
-        html += `<th><input class="filter" type="text" placeholder="Search ${k}" oninput="filterTable()" data-key="${k}"></th>`;
+    const container = document.getElementById('tableData');
+    container.innerHTML = "";
+
+    if (pageData.length === 0) {
+        container.innerHTML = "<p>No data</p>";
+        document.getElementById("pageInfo").textContent = "Page 0";
+        return;
+    }
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const trHead = document.createElement('tr');
+
+    // headers
+    Object.keys(pageData[0]).forEach(k => {
+        const th = document.createElement('th');
+        th.textContent = k;
+
+        // search input
+        const input = document.createElement('input');
+        input.className = 'filter';
+        input.dataset.key = k;
+        input.addEventListener('input', filterTable);
+        th.appendChild(document.createElement('br'));
+        th.appendChild(input);
+        trHead.appendChild(th);
     });
-    html += '<th></th></tr></thead><tbody>';
 
-    // Data rows
-    data.forEach(row => {
-        html += '<tr>';
-        keys.forEach(k => {
-            html += `<td contenteditable="true" data-key="${k}">${row[k] ?? ''}</td>`;
+    // actions header
+    const thActions = document.createElement('th');
+    thActions.textContent = "Actions";
+    trHead.appendChild(thActions);
+
+    thead.appendChild(trHead);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    pageData.forEach(row => {
+        const tr = document.createElement('tr');
+        Object.keys(row).forEach(k => {
+            const td = document.createElement('td');
+            td.setAttribute('data-key', k);
+            td.setAttribute('contenteditable', 'true');
+            td.textContent = row[k] ?? '';
+            tr.appendChild(td);
         });
-        html += `<td class="actions">
-                    <button onclick='saveRow(this)'>💾 Save</button>
-                    <button onclick='deleteRow(this)'>🗑️ Delete</button>
-                 </td>`;
-        html += '</tr>';
+
+        const tdActions = document.createElement('td');
+        tdActions.className = 'actions';
+        tdActions.innerHTML = `<button onclick='saveRow(this)'>💾 Save</button>
+                               <button onclick='deleteRow(this)'>🗑️ Delete</button>`;
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
     });
 
-    html += '</tbody></table>';
-    document.getElementById('tableData').innerHTML = html;
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    // update page info
+    const totalPages = Math.ceil(filteredData.length / pageSize);
+    document.getElementById("pageInfo").textContent = `Page ${currentPage} / ${totalPages}`;
 }
 
 function filterTable() {
@@ -230,49 +281,45 @@ function filterTable() {
         if (val !== "") filters[key] = val;
     });
 
-    const filtered = tableData.filter(row => {
-        return Object.entries(filters).every(([key, val]) => 
+    filteredData = tableData.filter(row => {
+        return Object.entries(filters).every(([key, val]) =>
             (row[key] ?? "").toString().toLowerCase().includes(val)
         );
     });
 
-    const tbody = document.querySelector("#tableData table tbody");
-    tbody.innerHTML = ""; // clear only tbody
+    currentPage = 1;
+    renderTablePage();
+}
 
-    filtered.forEach(row => {
-        const tr = document.createElement('tr');
-        Object.keys(row).forEach(k => {
-            const td = document.createElement('td');
-            td.setAttribute('data-key', k);
-            td.setAttribute('contenteditable', 'true');
-            td.textContent = row[k] ?? '';
-            tr.appendChild(td);
-        });
+function changePageSize(size) {
+    pageSize = parseInt(size);
+    currentPage = 1;
+    renderTablePage();
+}
 
-        // Actions column
-        const tdActions = document.createElement('td');
-        tdActions.className = 'actions';
-        tdActions.innerHTML = `<button onclick='saveRow(this)'>💾 Save</button>
-                               <button onclick='deleteRow(this)'>🗑️ Delete</button>`;
-        tr.appendChild(tdActions);
+function prevPage() {
+    if(currentPage > 1) {
+        currentPage--;
+        renderTablePage();
+    }
+}
 
-        tbody.appendChild(tr);
-    });
+function nextPage() {
+    if(currentPage < Math.ceil(filteredData.length / pageSize)) {
+        currentPage++;
+        renderTablePage();
+    }
 }
 
 function addRow() {
     const table = document.querySelector("#tableData table tbody");
-    if (!table) {
-        alert("Please select a table first.");
-        return;
-    }
+    if (!table) return alert("Please select a table first.");
 
     const headers = Array.from(document.querySelectorAll("#tableData thead th"))
         .map(th => th.innerText)
         .filter(h => h && h !== "Actions");
 
     const newRow = document.createElement("tr");
-
     headers.forEach(h => {
         newRow.innerHTML += `<td contenteditable="true" data-key="${h}"></td>`;
     });
@@ -280,6 +327,11 @@ function addRow() {
                             <button onclick='saveRow(this)'>💾 Save</button>
                             <button onclick='deleteRow(this)'>🗑️ Delete</button>
                          </td>`;
+
+    // append at the end of current page in filteredData
+    const insertIndex = (currentPage - 1) * pageSize + table.rows.length;
+    filteredData.splice(insertIndex, 0, {}); // placeholder
+    tableData.push({}); // global storage
     table.appendChild(newRow);
 }
 
@@ -291,9 +343,7 @@ async function saveRow(btn) {
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
-        if (value !== "") {
-            data[key] = value;
-        }
+        if (value !== "") data[key] = value;
     });
 
     const key = Object.keys(data).includes('word') ? 'word'
@@ -303,15 +353,12 @@ async function saveRow(btn) {
     if (!data.id) delete data.id;
 
     const body = { table: currentTable, key, data };
-
     const res = await fetch('/word', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
-
-    const json = await res.json();
-    alert(JSON.stringify(json, null, 2));
+    alert(JSON.stringify(await res.json(), null, 2));
     loadTable();
 }
 
@@ -330,28 +377,23 @@ async function deleteRow(btn) {
               : 'id';
 
     const body = { table: currentTable, key, action: 'delete', data };
-
     const res = await fetch('/word', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
-
-    const json = await res.json();
-    alert(JSON.stringify(json, null, 2));
+    alert(JSON.stringify(await res.json(), null, 2));
     loadTable();
 }
 
 async function rerender() {
     const res = await fetch('/render', { method: 'POST' });
-    const json = await res.json();
-    alert(JSON.stringify(json, null, 2));
+    alert(JSON.stringify(await res.json(), null, 2));
 }
 
-// Auto-load on page load
+// auto-load
 window.onload = loadTable;
 </script>
-
 </body>
 </html>
     """
