@@ -19,6 +19,22 @@ set sorted_adverb_adjectives = tables.adverbs_adjectives
 {% set var = namespace(examples_count=0) %}
 
 {% for adverb_adjective in sorted_adverb_adjectives %}
+    {% set adverb_examples = examples.get(('adverbs_adjectives', adverb_adjective.id)) %}
+    {% if adverb_examples %}
+        {% for adverb_example in adverb_examples | sort(attribute='created_at', reverse=True) %}
+            {% if var.examples_count < max_examples_to_show %}
+                {% set var.examples_count = var.examples_count + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+
+{% if var.examples_count > 0 %}
+## Examples:
+
+{% set var = namespace(examples_count=0) %}
+
+{% for adverb_adjective in sorted_adverb_adjectives %}
 {% set adverb_examples = examples.get(('adverbs_adjectives', adverb_adjective.id)) %}
 {% if adverb_examples %}
 {% for adverb_example in (adverb_examples | sort(attribute='created_at', reverse=True)) %}
@@ -30,6 +46,7 @@ set sorted_adverb_adjectives = tables.adverbs_adjectives
 {% endif %}{% endfor %}
 {% endif %}
 {% endfor %}
+{% endif %}
 
 
 ## Verbs
