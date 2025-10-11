@@ -75,15 +75,33 @@ endfor %}
 
 
 ## Nouns
-
-| Article | Greek | Translation | Comment |
-|---------|-------|-------------|---------|
-{% for noun in (
+{% set sorted_nouns = (
     tables.nouns
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
-    )[:max_rows_to_show] %}| *{{ noun.gender }}* | `{{ noun.word }}` | *{{ noun.translation }}* | {{ noun.comment }} |
-{% endfor %}
+    )[:max_rows_to_show] 
+%}
+| Article | Greek | Translation | Comment |
+|---------|-------|-------------|---------|
+{% for noun in sorted_nouns %}| *{{ noun.gender }}* | `{{ noun.word }}` | *{{ noun.translation }}* | {{ noun.comment }} |
+{% endfor %}{%
+
+set var = namespace(examples_count=0) 
+%}{% 
+for noun in sorted_nouns %}{% 
+    set noun_examples = examples.get(('nouns', noun.id)) %}{% 
+    if noun_examples %}{% 
+        for example in noun_examples | sort(attribute='created_at', reverse=True) %}{% 
+            if var.examples_count < max_examples_to_show %}{% 
+                if var.examples_count == 0 %}
+### Examples:
+{%              endif %}
+{{ render_example(example) }}
+{%              set var.examples_count = var.examples_count + 1 %}{% 
+            endif %}{% 
+        endfor %}{% 
+    endif %}{% 
+endfor %}
 
 ## Preposition
 
@@ -107,13 +125,31 @@ endfor %}
 {% endfor %}
 
 ## Numbers
-
-| Greek | Number | Ordinal | Comment |
-|-------|--------|---------|---------|
-{% for number in (
+{% set sorted_numbers = (
     tables.numbers
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
-    )[:max_rows_to_show] %}| `{{ number.word }}` | *{{ number.number }}* | {{ number.ordinal }} | {{ number.comment }} |
-{% endfor %}
+    )[:max_rows_to_show] 
+%}
+| Greek | Number | Ordinal | Comment |
+|-------|--------|---------|---------|
+{% for number in sorted_numbers %}| `{{ number.word }}` | *{{ number.number }}* | {{ number.ordinal }} | {{ number.comment }} |
+{% endfor %}{%
+
+set var = namespace(examples_count=0) 
+%}{% 
+for number in sorted_numbers %}{% 
+    set number_examples = examples.get(('numbers', number.id)) %}{% 
+    if number_examples %}{% 
+        for example in number_examples | sort(attribute='created_at', reverse=True) %}{% 
+            if var.examples_count < max_examples_to_show %}{% 
+                if var.examples_count == 0 %}
+### Examples:
+{%              endif %}
+{{ render_example(example) }}
+{%              set var.examples_count = var.examples_count + 1 %}{% 
+            endif %}{% 
+        endfor %}{% 
+    endif %}{% 
+endfor %}
 
