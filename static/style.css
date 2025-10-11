@@ -1,0 +1,11 @@
+body { font-family: Arial, sans-serif; margin: 40px; background: #fafafa; }
+select, input, button { margin: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; }
+button { cursor: pointer; background: #007bff; color: white; border: none; }
+button:hover { background: #0056b3; }
+table { border-collapse: collapse; width: 100%; margin-top: 15px; background: white; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+th { background: #f2f2f2; position: sticky; top: 0; }
+td[contenteditable="true"] { background: #fff9c4; }
+.actions { display: flex; gap: 5px; }
+.toolbar { margin-top: 10px; }
+input.filter { width: 95%; box-sizing: border-box; padding: 4px; }
