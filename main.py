@@ -236,10 +236,27 @@ function filterTable() {
         );
     });
 
-    renderTable(filtered);
-    // preserve filters in input fields after render
-    Object.entries(filters).forEach(([key, val]) => {
-        document.querySelector(`input[data-key="${key}"]`).value = val;
+    const tbody = document.querySelector("#tableData table tbody");
+    tbody.innerHTML = ""; // clear only tbody
+
+    filtered.forEach(row => {
+        const tr = document.createElement('tr');
+        Object.keys(row).forEach(k => {
+            const td = document.createElement('td');
+            td.setAttribute('data-key', k);
+            td.setAttribute('contenteditable', 'true');
+            td.textContent = row[k] ?? '';
+            tr.appendChild(td);
+        });
+
+        // Actions column
+        const tdActions = document.createElement('td');
+        tdActions.className = 'actions';
+        tdActions.innerHTML = `<button onclick='saveRow(this)'>💾 Save</button>
+                               <button onclick='deleteRow(this)'>🗑️ Delete</button>`;
+        tr.appendChild(tdActions);
+
+        tbody.appendChild(tr);
     });
 }
 
