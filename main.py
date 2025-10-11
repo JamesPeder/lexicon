@@ -125,6 +125,130 @@ def list_entries():
     except sqlite3.Error as e:
         return Response(json.dumps({"error": f"Database error: {str(e)}"}, ensure_ascii=False, indent=4), 
                         mimetype="application/json", status=500)
+        
+@app.route("/manage", methods=["GET"])
+def manage():
+    """Return a simple HTML interface for managing words."""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Word Database Manager</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    select, input, button { margin: 5px; padding: 5px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f2f2f2; }
+    .actions { display: flex; gap: 5px; }
+</style>
+</head>
+<body>
+
+<h1>📘 Greek Words Database Manager</h1>
+
+<div>
+    <label for="table">Select Table:</label>
+    <select id="table">
+        <option value="nouns">nouns</option>
+        <option value="verbs">verbs</option>
+        <option value="numbers">numbers</option>
+        <option value="adverbs_adjectives">adverbs_adjectives</option>
+    </select>
+    <button onclick="loadTable()">Load Table</button>
+    <button onclick="rerender()">Re-render Markdown</button>
+</div>
+
+<div id="tableData"></div>
+
+<script>
+async function loadTable() {
+    const table = document.getElementById('table').value;
+    const response = await fetch(`/words?table=${table}`);
+    const data = await response.json();
+
+    let html = '<table><tr>';
+    if (data.length === 0) {
+        document.getElementById('tableData').innerHTML = '<p>No entries found.</p>';
+        return;
+    }
+
+    // Create headers dynamically
+    Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
+    html += '<th>Actions</th></tr>';
+
+    // Populate rows
+    data.forEach(row => {
+        html += '<tr>';
+        Object.entries(row).forEach(([k, v]) => {
+            html += `<td contenteditable="true" data-key="${k}">${v ?? ''}</td>`;
+        });
+        html += `<td class="actions">
+                    <button onclick='saveRow(this, "${table}")'>💾 Save</button>
+                    <button onclick='deleteRow(this, "${table}")'>🗑️ Delete</button>
+                 </td>`;
+        html += '</tr>';
+    });
+    html += '</table>';
+    document.getElementById('tableData').innerHTML = html;
+}
+
+async function saveRow(btn, table) {
+    const row = btn.closest('tr');
+    const cells = row.querySelectorAll('td[data-key]');
+    const data = {};
+    cells.forEach(cell => data[cell.dataset.key] = cell.innerText.trim());
+
+    const key = Object.keys(data).includes('word') ? 'word'
+              : Object.keys(data).includes('number') ? 'number'
+              : 'id';
+
+    const body = { table, key, data };
+
+    const res = await fetch('/word', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    alert(JSON.stringify(json, null, 2));
+    loadTable();
+}
+
+async function deleteRow(btn, table) {
+    const row = btn.closest('tr');
+    const cells = row.querySelectorAll('td[data-key]');
+    const data = {};
+    cells.forEach(cell => data[cell.dataset.key] = cell.innerText.trim());
+
+    const key = Object.keys(data).includes('word') ? 'word'
+              : Object.keys(data).includes('number') ? 'number'
+              : 'id';
+
+    const body = { table, key, action: 'delete', data };
+
+    const res = await fetch('/word', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    alert(JSON.stringify(json, null, 2));
+    loadTable();
+}
+
+async function rerender() {
+    const res = await fetch('/render', { method: 'POST' });
+    const json = await res.json();
+    alert(JSON.stringify(json, null, 2));
+}
+</script>
+
+</body>
+</html>
+    """
+
 
 
 if __name__ == "__main__":
