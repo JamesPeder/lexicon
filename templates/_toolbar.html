@@ -1,26 +1,30 @@
 <div class="toolbar">
-    <label for="table">Select Table:</label>
-    <select id="table" onchange="loadTable()">
-        <option value="nouns">nouns</option>
-        <option value="verbs">verbs</option>
-        <option value="numbers">numbers</option>
-        <option value="adverbs_adjectives">adverbs_adjectives</option>
-    </select>
-    <button onclick="loadTable()">🔄 Refresh</button>
-    <button onclick="addRow()">➕ Add New Row</button>
-    <button onclick="rerender()">🔁 Re-render Markdown</button>
+    <div class="toolbar-left">
+        <label for="table">Select Table:</label>
+        <select id="table" onchange="loadTable()">
+            <option value="nouns">nouns</option>
+            <option value="verbs">verbs</option>
+            <option value="numbers">numbers</option>
+            <option value="adverbs_adjectives">adverbs_adjectives</option>
+        </select>
+        <button onclick="loadTable()">🔄 Refresh</button>
+        <button onclick="addRow()">➕ New Row</button>
+        <button onclick="rerender()">🔁 Render Markdown</button>
+    </div>
 
-    Page size:
-    <select id="pageSize" onchange="changePageSize(this.value)">
-        <option>10</option>
-        <option>25</option>
-        <option>50</option>
-        <option>100</option>
-    </select>
+    <div class="toolbar-right">
+        <label for="pageSize">Page size:</label>
+        <select id="pageSize" onchange="changePageSize(this.value)">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+        </select>
 
-    <button onclick="prevPage()">⬅️ Prev</button>
-    <span id="pageInfo">Page 1</span>
-    <button onclick="nextPage()">➡️ Next</button>
+        <button onclick="prevPage()">⬅️ Prev</button>
+        <span id="pageInfo">Page 1</span>
+        <button onclick="nextPage()">➡️ Next</button>
+    </div>
 </div>
 
 <div id="tableData"></div>
