@@ -125,10 +125,9 @@ def list_entries():
     except sqlite3.Error as e:
         return Response(json.dumps({"error": f"Database error: {str(e)}"}, ensure_ascii=False, indent=4), 
                         mimetype="application/json", status=500)
-        
 @app.route("/manage", methods=["GET"])
 def manage():
-    """Return a simple HTML interface for managing words (with Add Row)."""
+    """HTML interface to view, edit, delete, search, and re-render words."""
     return """
 <!DOCTYPE html>
 <html lang="en">
@@ -142,10 +141,11 @@ def manage():
     button:hover { background: #0056b3; }
     table { border-collapse: collapse; width: 100%; margin-top: 15px; background: white; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background: #f2f2f2; }
+    th { background: #f2f2f2; position: sticky; top: 0; }
     td[contenteditable="true"] { background: #fff9c4; }
     .actions { display: flex; gap: 5px; }
     .toolbar { margin-top: 10px; }
+    input.filter { width: 95%; box-sizing: border-box; padding: 4px; }
 </style>
 </head>
 <body>
@@ -154,13 +154,13 @@ def manage():
 
 <div class="toolbar">
     <label for="table">Select Table:</label>
-    <select id="table">
+    <select id="table" onchange="loadTable()">
         <option value="nouns">nouns</option>
         <option value="verbs">verbs</option>
         <option value="numbers">numbers</option>
         <option value="adverbs_adjectives">adverbs_adjectives</option>
     </select>
-    <button onclick="loadTable()">📄 Load Table</button>
+    <button onclick="loadTable()">🔄 Reload Table</button>
     <button onclick="addRow()">➕ Add New Row</button>
     <button onclick="rerender()">🔁 Re-render Markdown</button>
 </div>
@@ -169,26 +169,43 @@ def manage():
 
 <script>
 let currentTable = "";
+let tableData = []; // cache of current table
 
 async function loadTable() {
     currentTable = document.getElementById('table').value;
-    const response = await fetch(`/words?table=${currentTable}`);
-    const data = await response.json();
+    document.getElementById('tableData').innerHTML = '<p>Loading...</p>';
 
-    if (data.length === 0) {
-        document.getElementById('tableData').innerHTML = '<p>No entries found.</p>';
-        return;
+    try {
+        const response = await fetch(`/words?table=${currentTable}`);
+        const data = await response.json();
+
+        tableData = data; // store globally for filtering
+
+        if (data.length === 0) {
+            document.getElementById('tableData').innerHTML = '<p>No entries found.</p>';
+            return;
+        }
+
+        renderTable(data);
+    } catch (err) {
+        document.getElementById('tableData').innerHTML = `<p style="color:red;">Error loading data: ${err}</p>`;
     }
-
-    renderTable(data);
 }
 
 function renderTable(data) {
-    let html = '<table><tr>';
+    let html = '<table><thead><tr>';
     const keys = Object.keys(data[0]);
     keys.forEach(key => html += `<th>${key}</th>`);
     html += '<th>Actions</th></tr>';
 
+    // 🔍 Add search filter inputs
+    html += '<tr id="filterRow">';
+    keys.forEach(k => {
+        html += `<th><input class="filter" type="text" placeholder="Search ${k}" oninput="filterTable()" data-key="${k}"></th>`;
+    });
+    html += '<th></th></tr></thead><tbody>';
+
+    // Data rows
     data.forEach(row => {
         html += '<tr>';
         keys.forEach(k => {
@@ -201,18 +218,42 @@ function renderTable(data) {
         html += '</tr>';
     });
 
-    html += '</table>';
+    html += '</tbody></table>';
     document.getElementById('tableData').innerHTML = html;
 }
 
+function filterTable() {
+    const filters = {};
+    document.querySelectorAll('.filter').forEach(input => {
+        const key = input.dataset.key;
+        const val = input.value.trim().toLowerCase();
+        if (val !== "") filters[key] = val;
+    });
+
+    const filtered = tableData.filter(row => {
+        return Object.entries(filters).every(([key, val]) => 
+            (row[key] ?? "").toString().toLowerCase().includes(val)
+        );
+    });
+
+    renderTable(filtered);
+    // preserve filters in input fields after render
+    Object.entries(filters).forEach(([key, val]) => {
+        document.querySelector(`input[data-key="${key}"]`).value = val;
+    });
+}
+
 function addRow() {
-    const table = document.querySelector("#tableData table");
+    const table = document.querySelector("#tableData table tbody");
     if (!table) {
-        alert("Please load a table first.");
+        alert("Please select a table first.");
         return;
     }
 
-    const headers = Array.from(table.querySelectorAll("th")).map(th => th.innerText).filter(h => h !== "Actions");
+    const headers = Array.from(document.querySelectorAll("#tableData thead th"))
+        .map(th => th.innerText)
+        .filter(h => h && h !== "Actions");
+
     const newRow = document.createElement("tr");
 
     headers.forEach(h => {
@@ -229,11 +270,20 @@ async function saveRow(btn) {
     const row = btn.closest('tr');
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
-    cells.forEach(cell => data[cell.dataset.key] = cell.innerText.trim());
+
+    cells.forEach(cell => {
+        const key = cell.dataset.key;
+        const value = cell.innerText.trim();
+        if (value !== "") {
+            data[key] = value;
+        }
+    });
 
     const key = Object.keys(data).includes('word') ? 'word'
               : Object.keys(data).includes('number') ? 'number'
               : 'id';
+
+    if (!data.id) delete data.id;
 
     const body = { table: currentTable, key, data };
 
@@ -242,6 +292,7 @@ async function saveRow(btn) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
+
     const json = await res.json();
     alert(JSON.stringify(json, null, 2));
     loadTable();
@@ -251,7 +302,11 @@ async function deleteRow(btn) {
     const row = btn.closest('tr');
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
-    cells.forEach(cell => data[cell.dataset.key] = cell.innerText.trim());
+    cells.forEach(cell => {
+        const key = cell.dataset.key;
+        const value = cell.innerText.trim();
+        if (value !== "") data[key] = value;
+    });
 
     const key = Object.keys(data).includes('word') ? 'word'
               : Object.keys(data).includes('number') ? 'number'
@@ -264,6 +319,7 @@ async function deleteRow(btn) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
+
     const json = await res.json();
     alert(JSON.stringify(json, null, 2));
     loadTable();
@@ -274,12 +330,14 @@ async function rerender() {
     const json = await res.json();
     alert(JSON.stringify(json, null, 2));
 }
+
+// Auto-load on page load
+window.onload = loadTable;
 </script>
 
 </body>
 </html>
     """
-
 
 
 if __name__ == "__main__":
