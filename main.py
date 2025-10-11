@@ -209,42 +209,45 @@ function renderTablePage() {
     const pageData = filteredData.slice(tbodyStart, tbodyEnd);
 
     const container = document.getElementById('tableData');
-    container.innerHTML = "";
 
-    if (pageData.length === 0) {
-        container.innerHTML = "<p>No data</p>";
-        document.getElementById("pageInfo").textContent = "Page 0";
-        return;
+    if (!container.querySelector('table')) {
+        // first-time render: build table & header with search inputs
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+
+        Object.keys(pageData[0] || {}).forEach(k => {
+            const th = document.createElement('th');
+            th.textContent = k;
+
+            // search input
+            const input = document.createElement('input');
+            input.className = 'filter';
+            input.dataset.key = k;
+            input.addEventListener('input', filterTable);
+            th.appendChild(document.createElement('br'));
+            th.appendChild(input);
+
+            trHead.appendChild(th);
+        });
+
+        const thActions = document.createElement('th');
+        thActions.textContent = "Actions";
+        trHead.appendChild(thActions);
+
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+
+        container.innerHTML = "";
+        container.appendChild(table);
     }
 
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const trHead = document.createElement('tr');
-
-    // headers
-    Object.keys(pageData[0]).forEach(k => {
-        const th = document.createElement('th');
-        th.textContent = k;
-
-        // search input
-        const input = document.createElement('input');
-        input.className = 'filter';
-        input.dataset.key = k;
-        input.addEventListener('input', filterTable);
-        th.appendChild(document.createElement('br'));
-        th.appendChild(input);
-        trHead.appendChild(th);
-    });
-
-    // actions header
-    const thActions = document.createElement('th');
-    thActions.textContent = "Actions";
-    trHead.appendChild(thActions);
-
-    thead.appendChild(trHead);
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
+    // render only tbody
+    const tbody = container.querySelector('tbody');
+    tbody.innerHTML = "";
 
     pageData.forEach(row => {
         const tr = document.createElement('tr');
@@ -265,11 +268,8 @@ function renderTablePage() {
         tbody.appendChild(tr);
     });
 
-    table.appendChild(tbody);
-    container.appendChild(table);
-
     // update page info
-    const totalPages = Math.ceil(filteredData.length / pageSize);
+    const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
     document.getElementById("pageInfo").textContent = `Page ${currentPage} / ${totalPages}`;
 }
 
