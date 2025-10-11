@@ -1,7 +1,7 @@
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
 
-TEMPLATE_PATH = "resources/template.md"
+TEMPLATE_PATH = "resources/notebook.md"
 OUTPUT_PATH = "resources/preview.md"
 DB_FILE = "database.db"
 
@@ -23,8 +23,12 @@ def render_markdown():
         for table in TABLES:
             c.execute(f"SELECT * FROM {table}")
             rows = c.fetchall()
-            # Convert rows to list of dicts
-            all_data[table] = [dict(row) for row in rows]
+            # Convert rows to list of dicts, replacing None with ""
+            table_data = []
+            for row in rows:
+                row_dict = {k: (v if v is not None else "") for k, v in dict(row).items()}
+                table_data.append(row_dict)
+            all_data[table] = table_data
 
     # 2. Set up Jinja2
     env = Environment(loader=FileSystemLoader("."))
