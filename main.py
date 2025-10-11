@@ -128,7 +128,7 @@ def list_entries():
         
 @app.route("/manage", methods=["GET"])
 def manage():
-    """Return a simple HTML interface for managing words."""
+    """Return a simple HTML interface for managing words (with Add Row)."""
     return """
 <!DOCTYPE html>
 <html lang="en">
@@ -136,19 +136,23 @@ def manage():
 <meta charset="UTF-8">
 <title>Word Database Manager</title>
 <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    select, input, button { margin: 5px; padding: 5px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 15px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    body { font-family: Arial, sans-serif; margin: 40px; background: #fafafa; }
+    select, input, button { margin: 5px; padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; }
+    button { cursor: pointer; background: #007bff; color: white; border: none; }
+    button:hover { background: #0056b3; }
+    table { border-collapse: collapse; width: 100%; margin-top: 15px; background: white; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     th { background: #f2f2f2; }
+    td[contenteditable="true"] { background: #fff9c4; }
     .actions { display: flex; gap: 5px; }
+    .toolbar { margin-top: 10px; }
 </style>
 </head>
 <body>
 
 <h1>📘 Greek Words Database Manager</h1>
 
-<div>
+<div class="toolbar">
     <label for="table">Select Table:</label>
     <select id="table">
         <option value="nouns">nouns</option>
@@ -156,45 +160,72 @@ def manage():
         <option value="numbers">numbers</option>
         <option value="adverbs_adjectives">adverbs_adjectives</option>
     </select>
-    <button onclick="loadTable()">Load Table</button>
-    <button onclick="rerender()">Re-render Markdown</button>
+    <button onclick="loadTable()">📄 Load Table</button>
+    <button onclick="addRow()">➕ Add New Row</button>
+    <button onclick="rerender()">🔁 Re-render Markdown</button>
 </div>
 
 <div id="tableData"></div>
 
 <script>
+let currentTable = "";
+
 async function loadTable() {
-    const table = document.getElementById('table').value;
-    const response = await fetch(`/words?table=${table}`);
+    currentTable = document.getElementById('table').value;
+    const response = await fetch(`/words?table=${currentTable}`);
     const data = await response.json();
 
-    let html = '<table><tr>';
     if (data.length === 0) {
         document.getElementById('tableData').innerHTML = '<p>No entries found.</p>';
         return;
     }
 
-    // Create headers dynamically
-    Object.keys(data[0]).forEach(key => html += `<th>${key}</th>`);
+    renderTable(data);
+}
+
+function renderTable(data) {
+    let html = '<table><tr>';
+    const keys = Object.keys(data[0]);
+    keys.forEach(key => html += `<th>${key}</th>`);
     html += '<th>Actions</th></tr>';
 
-    // Populate rows
     data.forEach(row => {
         html += '<tr>';
-        Object.entries(row).forEach(([k, v]) => {
-            html += `<td contenteditable="true" data-key="${k}">${v ?? ''}</td>`;
+        keys.forEach(k => {
+            html += `<td contenteditable="true" data-key="${k}">${row[k] ?? ''}</td>`;
         });
         html += `<td class="actions">
-                    <button onclick='saveRow(this, "${table}")'>💾 Save</button>
-                    <button onclick='deleteRow(this, "${table}")'>🗑️ Delete</button>
+                    <button onclick='saveRow(this)'>💾 Save</button>
+                    <button onclick='deleteRow(this)'>🗑️ Delete</button>
                  </td>`;
         html += '</tr>';
     });
+
     html += '</table>';
     document.getElementById('tableData').innerHTML = html;
 }
 
-async function saveRow(btn, table) {
+function addRow() {
+    const table = document.querySelector("#tableData table");
+    if (!table) {
+        alert("Please load a table first.");
+        return;
+    }
+
+    const headers = Array.from(table.querySelectorAll("th")).map(th => th.innerText).filter(h => h !== "Actions");
+    const newRow = document.createElement("tr");
+
+    headers.forEach(h => {
+        newRow.innerHTML += `<td contenteditable="true" data-key="${h}"></td>`;
+    });
+    newRow.innerHTML += `<td class="actions">
+                            <button onclick='saveRow(this)'>💾 Save</button>
+                            <button onclick='deleteRow(this)'>🗑️ Delete</button>
+                         </td>`;
+    table.appendChild(newRow);
+}
+
+async function saveRow(btn) {
     const row = btn.closest('tr');
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
@@ -204,7 +235,7 @@ async function saveRow(btn, table) {
               : Object.keys(data).includes('number') ? 'number'
               : 'id';
 
-    const body = { table, key, data };
+    const body = { table: currentTable, key, data };
 
     const res = await fetch('/word', {
         method: 'POST',
@@ -216,7 +247,7 @@ async function saveRow(btn, table) {
     loadTable();
 }
 
-async function deleteRow(btn, table) {
+async function deleteRow(btn) {
     const row = btn.closest('tr');
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
@@ -226,7 +257,7 @@ async function deleteRow(btn, table) {
               : Object.keys(data).includes('number') ? 'number'
               : 'id';
 
-    const body = { table, key, action: 'delete', data };
+    const body = { table: currentTable, key, action: 'delete', data };
 
     const res = await fetch('/word', {
         method: 'POST',
