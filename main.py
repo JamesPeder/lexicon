@@ -53,7 +53,7 @@ def manage_word():
         if action == "delete":
             return handle_delete_operation(table_name, collision_key, data)
         else:
-            return handle_upsert_operation((table_name, collision_key, data))
+            return handle_upsert_operation(table_name, collision_key, data)
     except sqlite3.Error as e:
         return jsonify({"error": f"Database error: {str(e)}"}), 500
     except ValueError as e:
