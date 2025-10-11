@@ -1,0 +1,4 @@
+venv
+resources/preview.md
+__pycache__
+database.db
