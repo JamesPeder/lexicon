@@ -160,6 +160,7 @@ async function saveRow(btn) {
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
 
+    // Collect data from row
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
@@ -178,8 +179,30 @@ async function saveRow(btn) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
-    alert_notification(res);
-    loadTable(true);
+
+    const updatedRow = await res.json();
+    await alert_notification(res);
+
+    // Merge updated row into tableData
+    const idKey = 'id';
+    if (updatedRow[idKey]) {
+        const index = tableData.findIndex(r => r[idKey] === updatedRow[idKey]);
+        if (index >= 0) {
+            tableData[index] = { ...tableData[index], ...updatedRow };
+        } else {
+            tableData.push(updatedRow);
+        }
+    }
+
+    // Re-filter and render current page
+    filterTable();
+
+    // Highlight saved row
+    row.style.transition = 'background-color 0.3s';
+    row.style.backgroundColor = '#d4edda';  // light green
+    setTimeout(() => {
+        row.style.backgroundColor = '';
+    }, 1000);
 }
 
 async function deleteRow(btn) {
