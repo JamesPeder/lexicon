@@ -4,7 +4,7 @@ let filteredData = []; // filtered by search
 let currentPage = 1;
 let pageSize = 10;
 
-async function loadTable() {
+async function loadTable(preservePaging = false) {
     currentTable = document.getElementById('table').value;
     document.getElementById('tableData').innerHTML = '<p>Loading...</p>';
 
@@ -12,7 +12,11 @@ async function loadTable() {
         const response = await fetch(`/words?table=${currentTable}`);
         tableData = await response.json();
         filteredData = tableData.slice();
-        currentPage = 1;
+
+        if (!preservePaging) {
+            currentPage = 1;
+        }
+
         renderTablePage();
     } catch (err) {
         document.getElementById('tableData').innerHTML = `<p style="color:red;">Error: ${err}</p>`;
@@ -175,7 +179,7 @@ async function saveRow(btn) {
         body: JSON.stringify(body)
     });
     alert_notification(res);
-    loadTable();
+    loadTable(true);
 }
 
 async function deleteRow(btn) {
@@ -199,7 +203,7 @@ async function deleteRow(btn) {
         body: JSON.stringify(body)
     });
     alert_notification(res);
-    loadTable();
+    loadTable(true);
 }
 
 async function rerender() {

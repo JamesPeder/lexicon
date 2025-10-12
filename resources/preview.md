@@ -6,16 +6,16 @@
 
 | Greek | Translation | Comment |
 |-------|-------------|---------|
- | `ἀπόψε` | *tonight* |  |
  | `στρατιωτικός` | *military, soldier* |  |
- | `δίγλωσσο` | *bilingual* |  |
  | `διάσημος` | *famous* |  |
- | `Πιθανό` | *possible* |  |
- | `φυσιολογικό` | *normal* |  |
- | `σημαντικό` | *important* |  |
  | `απαραίτητο` | *necessary* |  |
+ | `επίσημα` | *formal* |  |
+ | `Πιθανός, Πιθανή, Πιθανό` | *possible* |  |
  | `τοπικός` | *local* |  |
- | `νέος` | *young, new* |  |
+ | `άσχημος` | *ugly, unattractive, bad, unpleasant* |  |
+ | `εξαιρετικό` | *excellent* |  |
+ | `φυσιολογικό` | *normal* |  |
+ | `νόμιμο` | *legal* |  |
 
 ### Examples:
 
