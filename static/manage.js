@@ -210,7 +210,7 @@ async function rerender() {
 async function alert_notification(response) {
     const data = await response.json();
 
-    if (!res.ok) {
+    if (!response.ok) {
         // Only show alert for error responses
         alert(JSON.stringify(data, null, 2));
     } else {

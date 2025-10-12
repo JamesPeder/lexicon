@@ -22,8 +22,19 @@ set sorted_adverb_adjectives = (
  %}
 | Greek | Translation | Comment |
 |-------|-------------|---------|
-{% for adverb_adjective in sorted_adverb_adjectives 
-%}| `{{ adverb_adjective.adjective_male }}` | *{{ adverb_adjective.translation }}* | {{ adverb_adjective.comment }} |
+{% for adverb_adjective in sorted_adverb_adjectives %}{% 
+    set parts = [
+        adverb_adjective.adjective_male,
+        adverb_adjective.adjective_female,
+        adverb_adjective.adjective_neutral,
+        adverb_adjective.adverb
+    ] %} | `{{ 
+    parts
+   | map('default', '')
+   | map('trim')
+   | reject('equalto', '')
+   | join(', ')
+    }}` | *{{ adverb_adjective.translation }}* | {{ adverb_adjective.comment }} |
 {% endfor %}{% 
 
 set var = namespace(examples_count=0) 

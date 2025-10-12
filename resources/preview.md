@@ -6,16 +6,16 @@
 
 | Greek | Translation | Comment |
 |-------|-------------|---------|
-| `στρατιωτικός` | *military, soldier* |  |
-| `δίγλωσσο` | *bilingual* |  |
-| `διάσημος` | *famous* |  |
-| `Πιθανό` | *possible* |  |
-| `φυσιολογικό` | *normal* |  |
-| `σημαντικό` | *important* |  |
-| `απαραίτητο` | *necessary* |  |
-| `τοπικός` | *local* |  |
-| `νέος` | *young, new* |  |
-| `νόμιμο` | *legal* |  |
+ | `ἀπόψε` | *tonight* |  |
+ | `στρατιωτικός` | *military, soldier* |  |
+ | `δίγλωσσο` | *bilingual* |  |
+ | `διάσημος` | *famous* |  |
+ | `Πιθανό` | *possible* |  |
+ | `φυσιολογικό` | *normal* |  |
+ | `σημαντικό` | *important* |  |
+ | `απαραίτητο` | *necessary* |  |
+ | `τοπικός` | *local* |  |
+ | `νέος` | *young, new* |  |
 
 ### Examples:
 
@@ -33,6 +33,7 @@
 
 | Greek | Translation | Comment |
 |-------|-------------|---------|
+| `γνωρίζω` | *I know, I meet, I get to know* |  |
 | `Χάρηκα` | *Nice to meet you* | Aorist tense - I got pleased. I was gladdened |
 | `χαίρομαι` | *to be glad or to rejoice* |  |
 | `κάνω` | *to do* |  |
@@ -53,22 +54,27 @@
 
 | Article | Greek | Translation | Comment |
 |---------|-------|-------------|---------|
+| *το* | `απόγευμα` | *afternoon* | Literally: after meal |
 | *το* | `σκόρδο` | *garlic* |  |
+| *το* | `βράδυ` | *evening* |  |
+| *το* | `πρωί` | *morning* |  |
+| *η* | `νύχτα` | *night* |  |
 | *ο* | `καιρός` | *weather* |  |
 | *το* | `σπαγγέτι` | *spaghetti* |  |
 | *το* | `κρεμμύδι` | *onion* |  |
 
 ### Examples:
 
+- `Καλό απόγευμα!`
+        
+    *Good afternoon!*
+
+- `Το απόγευμα θα πάω για καφέ`
+        
+    *In the afternoon, I’ll go for coffee*
+
 - `Ο καιρός αύριο θα είναι βροχερός`
     
-
-- `Ο καιρός σήμερα είναι ηλιόλουστος και ζεστός`
-    
-
-- `Έκοψα ένα μεγάλο κρεμμύδι για τη σαλάτα`
-        
-    *I chopped a big onion for the salad*
 
 
 ## Preposition
@@ -76,12 +82,10 @@
 
 `Πίσω` - *behind back*
 
-*hello*
-
 
 - `Το παιδί είναι πάνω σε ένα ξύλινο άλογο`
         
-    *he child is on a wooden horse*
+    *the child is on a wooden horse*
 
 `πάνω` - *on*
 
