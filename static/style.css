@@ -9,6 +9,21 @@ td[contenteditable="true"] { background: #fff9c4; }
 .actions { display: flex; gap: 5px; }
 input.filter { width: 95%; box-sizing: border-box; padding: 4px; }
 
+/* normal row */
+tr {
+    transition: background-color 0.5s;
+}
+
+/* row edited but not yet saved */
+tr.edited {
+    background-color: #cacaca; /* light yellow */
+}
+
+/* row saved successfully */
+tr.saved {
+    background-color: #39c95b; /* light green */
+}
+
 .toolbar {
     display: flex;
     justify-content: space-between; /* separates left/right sections */

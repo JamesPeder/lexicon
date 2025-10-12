@@ -93,7 +93,7 @@ function renderTablePage() {
     document.getElementById("pageInfo").textContent = `Page ${currentPage} / ${totalPages}`;
 }
 
-function filterTable() {
+function filterTable(resetPage=true) {
     const filters = {};
     document.querySelectorAll('.filter').forEach(input => {
         const key = input.dataset.key;
@@ -106,8 +106,9 @@ function filterTable() {
             (row[key] ?? "").toString().toLowerCase().includes(val)
         );
     });
-
-    currentPage = 1;
+    if (resetPage) {
+        currentPage = 1;
+    }
     renderTablePage();
 }
 
@@ -148,11 +149,17 @@ function addRow() {
                             <button onclick='deleteRow(this)'>🗑️ Delete</button>
                          </td>`;
 
-    // append at the end of current page in filteredData
-    const insertIndex = (currentPage - 1) * pageSize + table.rows.length;
-    filteredData.splice(insertIndex, 0, {}); // placeholder
-    tableData.push({}); // global storage
+    // Append row to both tableData and filteredData
+    const placeholder = {};
+    headers.forEach(h => placeholder[h.trim()] = null);
+    tableData.push(placeholder);
+    filteredData.push(placeholder);
+
+    // Append to DOM at the end of current page
     table.appendChild(newRow);
+
+    // Add "edited" highlight
+    newRow.classList.add('edited');
 }
 
 async function saveRow(btn) {
@@ -160,11 +167,11 @@ async function saveRow(btn) {
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
 
-    // Collect data from row
+    // collect data
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
-        data[key] = value;
+        data[key] = value || null; // treat empty string as null
     });
 
     const key = Object.keys(data).includes('word') ? 'word'
@@ -174,41 +181,56 @@ async function saveRow(btn) {
     if (!data.id) delete data.id;
 
     const body = { table: currentTable, key, data };
-    const res = await fetch('/word', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
-    });
 
-    const updatedRow = await res.json();
-    await alert_notification(res);
+    try {
+        const res = await fetch('/word', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        });
 
-    // Merge updated row into tableData
-    const idKey = 'id';
-    if (updatedRow[idKey]) {
-        const index = tableData.findIndex(r => r[idKey] === updatedRow[idKey]);
-        if (index >= 0) {
-            tableData[index] = { ...tableData[index], ...updatedRow };
-        } else {
-            tableData.push(updatedRow);
+        const json = await res.json();
+        if (!res.ok) throw new Error(JSON.stringify(json));
+
+        // Updated entry from db
+        const json_response_data = json.data;
+
+        // Update tableData in place
+        if (json_response_data.id) {
+            // Try to find existing row by id
+            let index = tableData.findIndex(r => r.id === json_response_data.id);
+
+            if (index >= 0) {
+                // Update existing row
+                tableData[index] = { ...tableData[index], ...json_response_data };
+            } else {
+                // No row with this id yet: find placeholder row (id is null/undefined)
+                index = tableData.findIndex(r => !r.id);
+                if (index >= 0) {
+                    tableData[index] = { ...tableData[index], ...json_response_data };
+                } else {
+                    // If no placeholder exists, append at the end
+                    tableData.push(json_response_data);
+                }
+            }
         }
+
+        // Update row style
+        row.classList.remove('edited');
+
+        // Update only current page without overwriting other edits
+        filterTable(false);
+
+    } catch(err) {
+        alert(err);
     }
-
-    // Re-filter and render current page
-    filterTable();
-
-    // Highlight saved row
-    row.style.transition = 'background-color 0.3s';
-    row.style.backgroundColor = '#d4edda';  // light green
-    setTimeout(() => {
-        row.style.backgroundColor = '';
-    }, 1000);
 }
 
 async function deleteRow(btn) {
     const row = btn.closest('tr');
     const cells = row.querySelectorAll('td[data-key]');
     const data = {};
+
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
@@ -220,14 +242,46 @@ async function deleteRow(btn) {
               : 'id';
 
     const body = { table: currentTable, key, action: 'delete', data };
-    const res = await fetch('/word', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(body)
-    });
-    alert_notification(res);
-    loadTable(true);
+
+    try {
+        const res = await fetch('/word', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body)
+        });
+
+        const json = await res.json();
+        if (!res.ok) throw new Error(JSON.stringify(json));
+
+        // Remove the row from tableData and filteredData
+        const idKey = 'id';
+        const idVal = data[idKey] ?? null;
+
+        if (idVal) {
+            const index = tableData.findIndex(r => String(r[idKey]) === String(idVal));
+            if (index >= 0) tableData.splice(index, 1);
+
+        } else {
+            // fallback: remove by matching the row DOM index in current page
+            const tbody = row.parentElement;
+            const pageStart = (currentPage - 1) * pageSize;
+            const rowIndex = Array.from(tbody.children).indexOf(row);
+            const globalIndex = pageStart + rowIndex;
+            if (globalIndex >= 0 && globalIndex < filteredData.length) {
+                tableData.splice(globalIndex, 1);
+            }
+        }
+
+        // Update page info without resetting current page
+        const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+        if (currentPage > totalPages) currentPage = totalPages;
+        filterTable(false);
+
+    } catch(err) {
+        alert(err);
+    }
 }
+
 
 async function rerender() {
     const res = await fetch('/render', { method: 'POST' });
@@ -244,6 +298,15 @@ async function alert_notification(response) {
         console.log('✅ Success:', data);
     }
 }
+
+document.querySelector("#tableData").addEventListener('input', function(e) {
+    const td = e.target.closest('td');
+    if (!td) return;
+    const tr = td.closest('tr');
+    if (!tr.classList.contains('edited')) {
+        tr.classList.add('edited');
+    }
+});
 
 // auto-load
 window.onload = loadTable;

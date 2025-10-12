@@ -26,14 +26,16 @@ def handle_delete_operation(table_name, collision_key, data):
 def handle_upsert_operation(table_name, collision_key, data):
     
     # Execute Database Operation
-    upsert_entry(table_name, collision_key, data)
+    row = upsert_entry(table_name, collision_key, data)
     
     # Trigger Markdown Rerender
     render_markdown()
     
-    # Return Response Body
-    return jsonify({"message": f"Entry '{data.get(collision_key)}' added/updated successfully!"}), 201
-
+    # Return Response Body including the inserted/updated row
+    return jsonify({
+        "message": f"Entry '{data.get(collision_key)}' added/updated successfully!",
+        "data": row
+    }), 201
 
 @app.route("/word", methods=["POST"])
 def manage_word():
