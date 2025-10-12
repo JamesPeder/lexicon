@@ -6,6 +6,7 @@ from python.database_utils.utils import BadRequest, ensure_columns_exist, get_ta
 
 DB_FILE = "database.db"
 DDL_SCRIPT_PATH = "sql/ddl.sql"
+COLUMNS_WITH_DEFAULT_VALUES = ['id', 'difficulty', 'created_at']
 
 
 def init_db():
@@ -46,6 +47,14 @@ def upsert_entry(table_name: str, collision_key: str, data: Dict):
     """
     if not data:
         raise BadRequest("Data dictionary cannot be empty.")
+    
+    # If we recieve an empty string, assume Null value in DB
+    data = {k: (v if v != "" else None) for k, v in data.items()}
+
+    # Remove 'id', 'difficulty', 'created_at' if value is None, as theses have default values
+    for col in COLUMNS_WITH_DEFAULT_VALUES:
+        if col in data and data[col] is None:
+            del data[col]
 
     # Normalize keys to a deterministic order
     columns = list(data.keys())
