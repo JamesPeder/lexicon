@@ -159,7 +159,7 @@ async function saveRow(btn) {
     cells.forEach(cell => {
         const key = cell.dataset.key;
         const value = cell.innerText.trim();
-        if (value !== "" || (key !== 'id' && key !== 'created_at')) data[key] = value;
+        if (value !== "" || (key !== 'id' && key !== 'created_at' && key !== 'difficulty')) data[key] = value;
     });
 
     const key = Object.keys(data).includes('word') ? 'word'
@@ -174,7 +174,7 @@ async function saveRow(btn) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
-    alert(JSON.stringify(await res.json(), null, 2));
+    alert_notification(res);
     loadTable();
 }
 
@@ -198,13 +198,24 @@ async function deleteRow(btn) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
     });
-    alert(JSON.stringify(await res.json(), null, 2));
+    alert_notification(res);
     loadTable();
 }
 
 async function rerender() {
     const res = await fetch('/render', { method: 'POST' });
-    alert(JSON.stringify(await res.json(), null, 2));
+    alert_notification(res);
+}
+
+async function alert_notification(response) {
+    const data = await response.json();
+
+    if (!res.ok) {
+        // Only show alert for error responses
+        alert(JSON.stringify(data, null, 2));
+    } else {
+        console.log('✅ Success:', data);
+    }
 }
 
 // auto-load
