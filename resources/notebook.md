@@ -114,7 +114,7 @@ for noun in sorted_nouns %}{%
     endif %}{% 
 endfor %}
 
-## Preposition
+## Prepositions
 
 {% for preposition in (
     tables.prepositions

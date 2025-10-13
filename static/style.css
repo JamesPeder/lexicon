@@ -56,3 +56,53 @@ tr.saved {
 .toolbar button:hover {
     background: #0056b3;
 }
+
+/* ----------------------------- */
+/* 🌙 Dark Mode Overrides (safe) */
+/* ----------------------------- */
+
+body.dark {
+  background: #111217;
+  color: #e6eef6;
+}
+
+body.dark table {
+  background: #14161a;
+  color: #e6eef6;
+}
+
+body.dark th {
+  background: #1c1f23;
+  color: #e6eef6;
+}
+
+body.dark td[contenteditable="true"] {
+  background: #2b2a24;
+  color: #e6eef6;
+}
+
+body.dark select,
+body.dark input,
+body.dark button {
+  background: #22262b;
+  color: #e6eef6;
+  border-color: #444;
+}
+
+body.dark button {
+  background: #2a9df4;
+}
+
+body.dark button:hover {
+  background: #0f79d6;
+}
+
+/* Optional: tweak row highlight colors */
+body.dark tr.edited {
+  background-color: #3a3a2b !important;
+}
+
+body.dark tr.saved {
+  background-color: #254f31 !important;
+}
+

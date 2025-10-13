@@ -6,26 +6,30 @@
 
 | Greek | Translation | Comment |
 |-------|-------------|---------|
+ | `ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως` | *foggy, misty* | Plural: ομιχλώδεις/δεις/δη |
  | `στρατιωτικός` | *military, soldier* |  |
  | `διάσημος` | *famous* |  |
  | `απαραίτητο` | *necessary* |  |
+ | `ιδιαίτερος, ιδιαίτερα` | *special, particular, distinct* | ιδιαίτερα - particularly |
  | `επίσημα` | *formal* |  |
+ | `επίσημος, επίσημα` | *official* |  |
+ | `χοντρός` | *fat, thick* |  |
  | `Πιθανός, Πιθανή, Πιθανό` | *possible* |  |
  | `τοπικός` | *local* |  |
- | `άσχημος` | *ugly, unattractive, bad, unpleasant* |  |
- | `εξαιρετικό` | *excellent* |  |
- | `φυσιολογικό` | *normal* |  |
- | `νόμιμο` | *legal* |  |
 
 ### Examples:
 
-- `Ο πατέρας μου είναι στρατιωτικός και εργάζεται στο ναυτικό`
+- `το ομιχλώδες τοπίο`
         
-    *My father is a military officer and works in the navy*
+    *The foggy landscape*
 
-- `Είναι πιθανό να βρέξει αργότερα σήμερα`
+- `Η ομιχλώδη λίμνη`
         
-    *It’s possible that it will rain later today*
+    *The foggy lake*
+
+- `Ο ομιχλώδης δρόμος`
+        
+    *The foggy road*
 
 
 
@@ -33,12 +37,18 @@
 
 | Greek | Translation | Comment |
 |-------|-------------|---------|
+| `προσχωρώ` | *to move forward, to advance* |  |
+| `καλύπτω` | *to cover* |  |
 | `γνωρίζω` | *I know, I meet, I get to know* |  |
 | `Χάρηκα` | *Nice to meet you* | Aorist tense - I got pleased. I was gladdened |
 | `χαίρομαι` | *to be glad or to rejoice* |  |
 | `κάνω` | *to do* |  |
 
 ### Examples:
+
+- `Προχωράμε με το οσχέδιο`
+        
+    *We are moving forward with the plan*
 
 - `Χάρηκα που σε γνώρισα!`
         
@@ -54,31 +64,51 @@
 
 | Article | Greek | Translation | Comment |
 |---------|-------|-------------|---------|
+| *το* | `δωμάτιο` | *room* | (In a house) |
+| *το* | `(τα) λεφτά` | *money* |  |
+| *η* | `ομίχλη` | *fog, mist* |  |
+| *η* | `ζέστη` | *heat* |  |
+| *η* | `ημέρα` | *day* | plural: ημέρες |
 | *το* | `απόγευμα` | *afternoon* | Literally: after meal |
 | *το* | `σκόρδο` | *garlic* |  |
 | *το* | `βράδυ` | *evening* |  |
 | *το* | `πρωί` | *morning* |  |
 | *η* | `νύχτα` | *night* |  |
-| *ο* | `καιρός` | *weather* |  |
-| *το* | `σπαγγέτι` | *spaghetti* |  |
-| *το* | `κρεμμύδι` | *onion* |  |
 
 ### Examples:
 
-- `Καλό απόγευμα!`
+- `Έχω τρία δωμάτια στο σπίτι μου`
         
-    *Good afternoon!*
+    *I have three rooms in my house*
 
-- `Το απόγευμα θα πάω για καφέ`
+- `Αυτός έχει λεφτά με ουρά`
         
-    *In the afternoon, I’ll go for coffee*
+    *He's loaded* - Literally: he has money with a tail
 
-- `Ο καιρός αύριο θα είναι βροχερός`
-    
+- `Τα λεφτά δεν φέρνουν την ευτυχία`
+        
+    *Money isn't everything* - Literally: Money doesn't bring happiness
 
 
-## Preposition
+## Prepositions
 
+
+`μετά` - *after, later*
+
+
+- `Μετά που τελείωσε η συνάντηση, οι συνεργάτες συζήτησαν για ώρες τα επόμενα βήματα του έργου`
+        
+    *After the meeting ended, the colleagues discussed for hours the next steps of the project*
+- `Μετά το σχολείο, πήγα σπίτι`
+        
+    *After school, i went home*
+
+`έξω` - *out, outside, outdoors*
+
+
+- `Μείνε έξω από το δωμάτιο`
+        
+    *Stay out of the room*
 
 `Πίσω` - *behind back*
 
@@ -102,9 +132,21 @@
 
 | Greek | Number | Ordinal | Comment |
 |-------|--------|---------|---------|
+| `εκατομμύριο` | *1000000* | εκατομμιοστός |  |
+| `πενήντα` | *50* | πεντηκοστός |  |
 | `τριάντα` | *30* |  |  |
 | `δεκαέξι` | *16* |  |  |
 | `δέκα` | *10* |  |  |
 | `Τέσσερα` | *4* | τέταρτος |  |
 | `δεκαοκτώ` | *18* |  |  |
+
+### Examples:
+
+- `Ήταν το εκατομμιοστό βιβλίο στη βιβλιοθήκη`
+        
+    *It was the millionth book in the library*
+
+- `Ο πεντηκοστός όροφος`
+        
+    *The fiftieth floor*
 

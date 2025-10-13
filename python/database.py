@@ -86,18 +86,33 @@ def upsert_entry(table_name: str, collision_key: str, data: Dict):
         VALUES ({placeholders})
         ON CONFLICT({quote_identifier(collision_key)}) DO UPDATE SET {update_str};
         """
-
+        
         cur = conn.cursor()
         cur.execute(sql, values)
-        conn.commit()
 
-        # Fetch the inserted/updated row
-        collision_value = data[collision_key]
-        cur.execute(
-            f"SELECT * FROM {quote_identifier(table_name)} WHERE {quote_identifier(collision_key)} = ?",
-            (collision_value,)
-        )
-        row = cur.fetchone()
+        # Case 1: new row inserted → lastrowid is valid
+        inserted_id = cur.lastrowid
+
+        # Case 2: existing row updated → fetch its id using the collision key
+        if not inserted_id:
+            cur.execute(
+                f"SELECT id FROM {quote_identifier(table_name)} WHERE {quote_identifier(collision_key)} = ?",
+                (data[collision_key],)
+            )
+            row = cur.fetchone()
+            inserted_id = row["id"] if row else None
+
+        # Now fetch the full updated/inserted row by id
+        if inserted_id:
+            cur.execute(
+                f"SELECT * FROM {quote_identifier(table_name)} WHERE id = ?",
+                (inserted_id,)
+            )
+            row = cur.fetchone()
+        else:
+            row = None
+
+        conn.commit()
         return dict(row) if row else None
 
 def delete_entry(table_name: str, collision_key: str, key_value):
