@@ -3,14 +3,7 @@
 {% 
 set max_rows_to_show = 10 %}{% 
 set max_examples_to_show = 3 
-%}{% 
-
-macro render_example(example) -%}
-- `{{ example.example_text }}`
-    {% if example.translation %}    
-    *{{ example.translation }}*{% endif %}{% if example.comment %} - {{ example.comment }}{% 
-    endif %}{%- 
-endmacro %}
+%}
 
 ## Adverbs / Adjectives
 {% set sorted_adverb_adjectives = (
@@ -34,24 +27,7 @@ for adverb_adjective in sorted_adverb_adjectives -%}
 endfor -%}
 
 {{ macros.render_table(processed_adverb_adjectives, ['Greek', 'Translation', 'Comment']) -}}
-{% 
-
-set var = namespace(examples_count=0) 
-%}{% 
-for adverb_adjective in sorted_adverb_adjectives %}{% 
-    set adverb_examples = examples.get(('adverbs_adjectives', adverb_adjective.id)) %}{% 
-    if adverb_examples %}{% 
-        for example in adverb_examples | sort(attribute='created_at', reverse=True) %}{% 
-            if var.examples_count < max_examples_to_show %}{% 
-                if var.examples_count == 0 %}
-### Examples:
-{%              endif %}
-{{ render_example(example) }}
-{%              set var.examples_count = var.examples_count + 1 %}{% 
-            endif %}{% 
-        endfor %}{% 
-    endif %}{% 
-endfor %}
+{{ macros.render_examples("adverbs_adjectives", sorted_adverb_adjectives, examples, max_examples_to_show) }}
 
 
 ## Verbs
@@ -76,7 +52,7 @@ for verb in sorted_verbs %}{%
                 if var.examples_count == 0 %}
 ### Examples:
 {%              endif %}
-{{ render_example(example) }}
+{{ macros.render_example(example) }}
 {%              set var.examples_count = var.examples_count + 1 %}{% 
             endif %}{% 
         endfor %}{% 
@@ -106,7 +82,7 @@ for noun in sorted_nouns %}{%
                 if var.examples_count == 0 %}
 ### Examples:
 {%              endif %}
-{{ render_example(example) }}
+{{ macros.render_example(example) }}
 {%              set var.examples_count = var.examples_count + 1 %}{% 
             endif %}{% 
         endfor %}{% 
@@ -131,7 +107,7 @@ endfor %}
             preposition_examples
             | sort(attribute='created_at', reverse=True)
         )[:max_examples_to_show] %}
-{{          render_example(preposition_example) }}{% 
+{{          macros.render_example(preposition_example) }}{% 
         endfor %}{% 
     endif %}
 {% endfor %}
@@ -158,7 +134,7 @@ for number in sorted_numbers %}{%
                 if var.examples_count == 0 %}
 ### Examples:
 {%              endif %}
-{{ render_example(example) }}
+{{ macros.render_example(example) }}
 {%              set var.examples_count = var.examples_count + 1 %}{% 
             endif %}{% 
         endfor %}{% 

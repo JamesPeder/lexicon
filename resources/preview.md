@@ -21,19 +21,18 @@
 
 
 ### Examples:
-
+                
 - `το ομιχλώδες τοπίο`
         
     *The foggy landscape*
-
+                
 - `Η ομιχλώδη λίμνη`
         
     *The foggy lake*
-
+                
 - `Ο ομιχλώδης δρόμος`
         
     *The foggy road*
-
 
 
 ## Verbs

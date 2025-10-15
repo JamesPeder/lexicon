@@ -12,6 +12,34 @@ _No data available._
 {% endif %}
 {% endmacro %}
 
+{% macro render_example(example) -%}
+  
+- `{{ example.example_text }}`
+    {% if example.translation %}    
+    *{{ example.translation }}*{% endif %}{% if example.comment %} - {{ example.comment }}{% endif %}
+{%- endmacro %}
+
+{% macro render_examples(table_name, data_list, example_mapping, max_examples=5, header="### Examples:") -%}
+{%- set var = namespace(count=0) -%}
+
+{%- for item in data_list -%}
+    {%- set item_examples = example_mapping.get((table_name, item.id)) -%}
+    {%- if item_examples -%}
+        {%- for example in item_examples | sort(attribute='created_at', reverse=True) -%}
+            {%- if var.count < max_examples -%}
+                {% if var.count == 0 %}
+{{ header }}{% endif %}
+                
+{{ render_example(example) }}
+                {%- set var.count = var.count + 1 -%}
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- endmacro %}
+
+
+
 {% macro join_strings(strings) -%}
     {%- set parts = [] -%}
     {%- for s in strings -%}
