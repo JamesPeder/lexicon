@@ -1,4 +1,4 @@
-
+{% import "resources/macros.md" as macros %}
 # Greek
 {% 
 set max_rows_to_show = 10 %}{% 
@@ -13,29 +13,36 @@ macro render_example(example) -%}
 endmacro %}
 
 ##  Adverbs / Adjectives 
-{% 
-set sorted_adverb_adjectives = (
-    tables.adverbs_adjectives 
+{% set sorted_adverb_adjectives = (
+    tables.adverbs_adjectives
     | sort(attribute='created_at', reverse=True)
     | sort(attribute='difficulty', reverse=True)
-    )[:max_rows_to_show]
- %}
-| Greek | Translation | Comment |
-|-------|-------------|---------|
-{% for adverb_adjective in sorted_adverb_adjectives %}{% 
-    set parts = [
+)[:max_rows_to_show] %}
+
+{# Build a new array with preprocessed attributes #}
+{% set processed = [] %}
+{% for adverb_adjective in sorted_adverb_adjectives %}
+    {% set parts = [
         adverb_adjective.adjective_male,
         adverb_adjective.adjective_female,
         adverb_adjective.adjective_neutral,
         adverb_adjective.adverb
-    ] %} | `{{ 
-    parts
-   | map('default', '')
-   | map('trim')
-   | reject('equalto', '')
-   | join(', ')
-    }}` | *{{ adverb_adjective.translation }}* | {{ adverb_adjective.comment }} |
-{% endfor %}{% 
+    ]
+    | map('default', '')
+    | map('trim')
+    | reject('equalto', '')
+    | join(', ')
+    %}
+
+    {% set _ = processed.append({
+        'Greek': parts,
+        'Translation': adverb_adjective.translation,
+        'Comment': adverb_adjective.comment
+    }) %}
+{% endfor %}
+
+{{ macros.render_table(processed, ['Greek', 'Translation', 'Comment']) }}
+{% 
 
 set var = namespace(examples_count=0) 
 %}{% 

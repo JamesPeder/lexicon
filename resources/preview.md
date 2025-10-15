@@ -4,18 +4,68 @@
 
 ##  Adverbs / Adjectives 
 
+
+
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+
+
 | Greek | Translation | Comment |
-|-------|-------------|---------|
- | `ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως` | *foggy, misty* | Plural: ομιχλώδεις/δεις/δη |
- | `στρατιωτικός` | *military, soldier* |  |
- | `διάσημος` | *famous* |  |
- | `απαραίτητο` | *necessary* |  |
- | `ιδιαίτερος, ιδιαίτερα` | *special, particular, distinct* | ιδιαίτερα - particularly |
- | `επίσημα` | *formal* |  |
- | `επίσημος, επίσημα` | *official* |  |
- | `χοντρός` | *fat, thick* |  |
- | `Πιθανός, Πιθανή, Πιθανό` | *possible* |  |
- | `τοπικός` | *local* |  |
+| ----- | ----- | ----- |
+| ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως | foggy, misty | Plural: ομιχλώδεις/δεις/δη |
+| στρατιωτικός | military, soldier |  |
+| διάσημος | famous |  |
+| απαραίτητο | necessary |  |
+| ιδιαίτερος, ιδιαίτερα | special, particular, distinct | ιδιαίτερα - particularly |
+| επίσημος, επίσημη, επίσημο, επίσημα | formal, official |  |
+| χοντρός | fat, thick |  |
+| Πιθανός, Πιθανή, Πιθανό | possible |  |
+| τοπικός | local |  |
+| άσχημος | ugly, unattractive, bad, unpleasant |  |
+
+
+
 
 ### Examples:
 
@@ -64,30 +114,30 @@
 
 | Article | Greek | Translation | Comment |
 |---------|-------|-------------|---------|
+| *ο* | `αιώνας` | *age, era, eternity* |  |
+| *η* | `γέννηση` | *birth* |  |
 | *το* | `δωμάτιο` | *room* | (In a house) |
+| *η* | `παρασκευή` | *friday* |  |
 | *το* | `(τα) λεφτά` | *money* |  |
+| *η* | `τρίτη` | *tuesday* |  |
+| *το* | `δευτέρα` | *monday* |  |
+| *το* | `τέλος` | *end* |  |
+| *η* | `τετάρτη` | *wednesday* |  |
 | *η* | `ομίχλη` | *fog, mist* |  |
-| *η* | `ζέστη` | *heat* |  |
-| *η* | `ημέρα` | *day* | plural: ημέρες |
-| *το* | `απόγευμα` | *afternoon* | Literally: after meal |
-| *το* | `σκόρδο` | *garlic* |  |
-| *το* | `βράδυ` | *evening* |  |
-| *το* | `πρωί` | *morning* |  |
-| *η* | `νύχτα` | *night* |  |
 
 ### Examples:
+
+- `Ο 21ος αιώνας είναι ο αιώνας της τεχνολογίας`
+        
+    *The 21st century is the century of technology*
 
 - `Έχω τρία δωμάτια στο σπίτι μου`
         
     *I have three rooms in my house*
 
-- `Αυτός έχει λεφτά με ουρά`
+- `Μου αρέσουν οι Παρασκευές`
         
-    *He's loaded* - Literally: he has money with a tail
-
-- `Τα λεφτά δεν φέρνουν την ευτυχία`
-        
-    *Money isn't everything* - Literally: Money doesn't bring happiness
+    *I like fridays*
 
 
 ## Prepositions
