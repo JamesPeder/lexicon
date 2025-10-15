@@ -2,68 +2,21 @@
 # Greek
 
 
-##  Adverbs / Adjectives 
-
-
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-
+## Adverbs / Adjectives
 
 
 | Greek | Translation | Comment |
 | ----- | ----- | ----- |
-| ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως | foggy, misty | Plural: ομιχλώδεις/δεις/δη |
-| στρατιωτικός | military, soldier |  |
-| διάσημος | famous |  |
-| απαραίτητο | necessary |  |
-| ιδιαίτερος, ιδιαίτερα | special, particular, distinct | ιδιαίτερα - particularly |
-| επίσημος, επίσημη, επίσημο, επίσημα | formal, official |  |
-| χοντρός | fat, thick |  |
-| Πιθανός, Πιθανή, Πιθανό | possible |  |
-| τοπικός | local |  |
-| άσχημος | ugly, unattractive, bad, unpleasant |  |
-
+| ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως | *foggy, misty* | Plural: ομιχλώδεις/δεις/δη |
+| στρατιωτικός | *military, soldier* |  |
+| διάσημος | *famous* |  |
+| απαραίτητο | *necessary* |  |
+| ιδιαίτερος, ιδιαίτερα | *special, particular, distinct* | ιδιαίτερα - particularly |
+| επίσημος, επίσημη, επίσημο, επίσημα | *formal, official* |  |
+| χοντρός | *fat, thick* |  |
+| Πιθανός, Πιθανή, Πιθανό | *possible* |  |
+| τοπικός | *local* |  |
+| άσχημος | *ugly, unattractive, bad, unpleasant* |  |
 
 
 

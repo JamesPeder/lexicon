@@ -11,3 +11,15 @@
 _No data available._
 {% endif %}
 {% endmacro %}
+
+{% macro preprocess_attributes(obj, attributes) -%}
+{%- set parts = [] -%}
+{%- for attr in attributes -%}
+    {%- set val = obj[attr] | default('') | trim -%}
+    {%- if val != '' -%}
+        {%- do parts.append(val) -%}
+    {%- endif -%}
+{%- endfor -%}
+{{ parts | join(', ') }}
+{%- endmacro %}
+
