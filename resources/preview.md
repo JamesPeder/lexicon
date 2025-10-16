@@ -1,9 +1,7 @@
-
 # Greek
 
 
 ## Adverbs / Adjectives
-
 
 | Greek | Translation | Comment |
 | ----- | ----- | ----- |
@@ -37,7 +35,6 @@
 
 ## Verbs
 
-
 | Greek | Translation | Comment |
 | ----- | ----- | ----- |
 | `προσχωρώ` | *to move forward, to advance* |  |
@@ -65,7 +62,6 @@
 
 
 ## Nouns
-
 
 | Article | Greek | Translation | Comment |
 | ----- | ----- | ----- | ----- |
@@ -102,8 +98,6 @@
 
 `μετά` - *after, later*
 
-
-
                 
 - `Μετά που τελείωσε η συνάντηση, οι συνεργάτες συζήτησαν για ώρες τα επόμενα βήματα του έργου`
         
@@ -113,27 +107,24 @@
         
     *After school, i went home*
 
+
 `έξω` - *out, outside, outdoors*
-
-
 
                 
 - `Μείνε έξω από το δωμάτιο`
         
     *Stay out of the room*
 
+
 `Πίσω` - *behind back*
-
-
 
                 
 - `Το παιδί είναι πάνω σε ένα ξύλινο άλογο`
         
     *the child is on a wooden horse*
 
+
 `πάνω` - *on*
-
-
 
                 
 - `Η γάτα κάθεται πάνω στο τραπέζι`
@@ -146,7 +137,6 @@
 
 
 ## Numbers
-
 
 | Greek | Number | Ordinal | Comment |
 | ----- | ----- | ----- | ----- |
