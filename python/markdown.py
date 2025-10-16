@@ -14,6 +14,34 @@ TABLES = [
     "examples"
 ]
 
+def sort_items(items, *attributes, reverse=True):
+    """
+    Sorts a list of objects or dicts by multiple attributes (in descending order by default).
+    
+    Example:
+        {{ tables.numbers | sort_items('difficulty', 'created_at') }}
+    """
+    if not attributes:
+        return items  # nothing to sort by
+
+    # Apply stable sorting in reverse order of priority
+    for attr in reversed(attributes):
+        items = sorted(
+            items,
+            key=lambda x: (
+                x.get(attr) if isinstance(x, dict) else getattr(x, attr, None)
+            ),
+            reverse=reverse
+        )
+    return items
+
+def default_sort(items):
+    """
+    Sorts items by difficulty (primary) and created_at (secondary), descending order.
+    """
+    return sort_items(items, 'difficulty', 'created_at')
+
+
 def render_markdown():
 
     # 1. Fetch all tables
@@ -40,6 +68,8 @@ def render_markdown():
         
     # 2. Set up Jinja2
     env = Environment(loader=FileSystemLoader("."))
+    env.filters['sort_items'] = sort_items
+    env.filters['default_sort'] = default_sort
     template = env.get_template(TEMPLATE_PATH)
 
     # 3. Render template with all table data
