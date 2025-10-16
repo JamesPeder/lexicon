@@ -1,5 +1,7 @@
-{% macro render_table(data, attributes) %}
-{% if data and attributes %}
+{%- import "resources/macros/formatting.md" as formatting -%}
+
+{% macro render_table(data, attributes) -%}
+    {%- if data and attributes %}
 | {% for attr in attributes %}{{ attr }}{% if not loop.last %} | {% endif %}{% endfor %} |
 | {% for attr in attributes %}-----{% if not loop.last %} | {% endif %}{% endfor %} |
 {% for row in data -%}
@@ -14,9 +16,10 @@ _No data available._
 
 {% macro render_example(example) -%}
   
-- `{{ example.example_text }}`
+- {{ formatting.highlighted(example.example_text) }}
     {% if example.translation %}    
-    *{{ example.translation }}*{% endif %}{% if example.comment %} - {{ example.comment }}{% endif %}
+    {{ formatting.italics(example.translation) }}{% endif %}{% if example.comment %} - {{ example.comment }}
+    {%- endif %}
 {%- endmacro %}
 
 {% macro render_examples(table_name, data_list, example_mapping, max_examples=5, header="### Examples:") -%}
@@ -28,7 +31,8 @@ _No data available._
         {%- for example in item_examples | sort(attribute='created_at', reverse=True) -%}
             {%- if var.count < max_examples -%}
                 {% if var.count == 0 %}
-{{ header }}{% endif %}
+{{ header }}
+                {%- endif %}
                 
 {{ render_example(example) }}
                 {%- set var.count = var.count + 1 -%}
@@ -37,33 +41,3 @@ _No data available._
     {%- endif -%}
 {%- endfor -%}
 {%- endmacro %}
-
-
-
-{% macro join_strings(strings) -%}
-    {%- set parts = [] -%}
-    {%- for s in strings -%}
-        {%- set val = s | default('') | trim -%}
-        {%- if val != '' -%}
-            {%- set _ = parts.append(val) -%}
-        {%- endif -%}
-    {%- endfor -%}
-    {{ parts | join(', ') }}
-{%- endmacro %}
-
-{% macro wrap_string(value, char) -%}
-    {{ char ~ value ~ char }}
-{%- endmacro %}
-
-{% macro italics(value) -%}
-    {{ wrap_string(value, '*') }}
-{%- endmacro %}
-
-{% macro bold(value) -%}
-    {{ wrap_string(value, '**') }}
-{%- endmacro %}
-
-{% macro highlighted(value) -%}
-    {{ wrap_string(value, '`') }}
-{%- endmacro %}
-

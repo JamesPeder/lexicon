@@ -3,6 +3,7 @@
 
 ## Adverbs / Adjectives
 
+
 | Greek | Translation | Comment |
 | ----- | ----- | ----- |
 | `ομιχλώδης, ομιχλώδη, ομιχλώδες, ομιχλώδως` | *foggy, misty* | Plural: ομιχλώδεις/δεις/δη |
@@ -35,6 +36,7 @@
 
 ## Verbs
 
+
 | Greek | Translation | Comment |
 | ----- | ----- | ----- |
 | `προσχωρώ` | *to move forward, to advance* |  |
@@ -62,6 +64,7 @@
 
 
 ## Nouns
+
 
 | Article | Greek | Translation | Comment |
 | ----- | ----- | ----- | ----- |
@@ -137,6 +140,7 @@
 
 
 ## Numbers
+
 
 | Greek | Number | Ordinal | Comment |
 | ----- | ----- | ----- | ----- |
