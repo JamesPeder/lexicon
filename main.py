@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify, Response, render_template
+from flask import Flask, request, jsonify, Response, render_template, send_from_directory
 import sqlite3
 import json
+import os
 
 from python.markdown import render_markdown 
 from python.database import init_db, select_all_from_table, upsert_entry, delete_entry
-from python.constants import MANAGE_TEMPLATE_PATH, HTML_TEMPLATE_PATH
+from python.constants import MANAGE_TEMPLATE_PATH, NOTEBOOK_TEMPLATE_PATH
 
-app = Flask(__name__, template_folder=HTML_TEMPLATE_PATH)
+app = Flask(__name__)
 
 def handle_delete_operation(table_name, collision_key, data):
     
@@ -100,6 +101,17 @@ def list_entries():
 @app.route("/manage", methods=["GET"])
 def manage():
     return render_template(MANAGE_TEMPLATE_PATH)
+
+MARKDOWN_FOLDER = "output"
+
+@app.route('/')
+def index():
+    md_files = [f for f in os.listdir(MARKDOWN_FOLDER) if f.endswith('.md')]
+    return render_template(NOTEBOOK_TEMPLATE_PATH, markdown_files=md_files)
+
+@app.route('/markdown/<filename>')
+def serve_markdown(filename):
+    return send_from_directory(MARKDOWN_FOLDER, filename)
 
 if __name__ == "__main__":
     init_db()

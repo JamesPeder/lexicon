@@ -1,5 +1,5 @@
-{%- import "macros/formatting.md" as formatting -%}
-{%- import "macros/structure.md" as structure -%}
+{%- import "markdown/macros/formatting.md" as formatting -%}
+{%- import "markdown/macros/structure.md" as structure -%}
 # Greek
 {%- set max_rows_to_show = 10 -%}
 {%- set max_examples_to_show = 3 %}

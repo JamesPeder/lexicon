@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notebook Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        code {
+            background: #eee;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📄 Notebook Viewer</h1>
+
+    <label for="markdown-select">Select Notebook:</label>
+    <select id="markdown-select">
+        {% for md_file in markdown_files %}
+        <option value="{{ md_file }}">{{ md_file }}</option>
+        {% endfor %}
+    </select>
+    <button id="load-md">Load</button>
+
+    <div id="markdown-container"></div>
+
+    <!-- marked.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        const container = document.getElementById('markdown-container');
+        const select = document.getElementById('markdown-select');
+        const loadBtn = document.getElementById('load-md');
+
+        function loadMarkdown(filename) {
+            fetch(`/markdown/${filename}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch markdown file');
+                    return response.text();
+                })
+                .then(text => {
+                    container.innerHTML = marked.parse(text);
+                })
+                .catch(err => {
+                    container.innerHTML = `<p style="color:red;">${err}</p>`;
+                });
+        }
+
+        // Load initially
+        if (select.value) loadMarkdown(select.value);
+
+        // Load on button click
+        loadBtn.addEventListener('click', () => {
+            loadMarkdown(select.value);
+        });
+    </script>
+</body>
+</html>

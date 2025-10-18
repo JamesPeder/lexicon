@@ -1,8 +1,9 @@
 # Templates
-MARKDOWN_INPUT_FOLDER_PATH= " templates/markdown/"
+TEMPLATE_FOLDER_PATH = "templates/"
+MARKDOWN_TEMPLATE_FOLDER_PATH= "templates/markdown/"
 MARKDOWN_OUTPUT_FOLDER_PATH = "output/"
-HTML_TEMPLATE_PATH = "templates/html/"
-MANAGE_TEMPLATE_PATH = "manage-db/manage.html"
+MANAGE_TEMPLATE_PATH = "html/manage-db/manage.html"
+NOTEBOOK_TEMPLATE_PATH = "html/notebook/notebook.html"
 
 
 # Database

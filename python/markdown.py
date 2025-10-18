@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
-from python.constants import MARKDOWN_INPUT_FOLDER_PATH, MARKDOWN_OUTPUT_FOLDER_PATH, DB_FILE, TABLES
+from python.constants import MARKDOWN_TEMPLATE_FOLDER_PATH, MARKDOWN_OUTPUT_FOLDER_PATH, DB_FILE, TABLES, TEMPLATE_FOLDER_PATH
 
 def sort_items(items, *attributes, reverse=True):
     """
@@ -31,7 +31,7 @@ def default_sort(items):
     return sort_items(items, 'difficulty', 'created_at')
 
 
-def render_markdown(input_folder=MARKDOWN_INPUT_FOLDER_PATH, output_folder=MARKDOWN_OUTPUT_FOLDER_PATH):
+def render_markdown(input_folder=MARKDOWN_TEMPLATE_FOLDER_PATH, output_folder=MARKDOWN_OUTPUT_FOLDER_PATH):
     # 1. Fetch all tables
     all_data = {}
     with sqlite3.connect(DB_FILE) as conn:
@@ -51,7 +51,7 @@ def render_markdown(input_folder=MARKDOWN_INPUT_FOLDER_PATH, output_folder=MARKD
         examples.setdefault(key, []).append(ex)
 
     # 2. Set up Jinja2
-    env = Environment(loader=FileSystemLoader(input_folder))
+    env = Environment(loader=FileSystemLoader(TEMPLATE_FOLDER_PATH))
     env.filters['sort_items'] = sort_items
     env.filters['default_sort'] = default_sort
 
@@ -61,7 +61,9 @@ def render_markdown(input_folder=MARKDOWN_INPUT_FOLDER_PATH, output_folder=MARKD
     # 4. Iterate over all markdown files in the input folder
     for filename in os.listdir(input_folder):
         if filename.endswith(".md"):
-            template = env.get_template(filename)
+            # Find relative path of file to templates directory
+            relative_path = os.path.relpath(os.path.join(input_folder, filename), TEMPLATE_FOLDER_PATH)
+            template = env.get_template(relative_path)
             rendered = template.render(tables=all_data, examples=examples)
 
             output_path = os.path.join(output_folder, filename)
