@@ -10,12 +10,12 @@
 | `στρατιωτικός` | *military, soldier* |  |
 | `διάσημος` | *famous* |  |
 | `απαραίτητο` | *necessary* |  |
+| `σεληνιακός` | *lunar* |  |
 | `ιδιαίτερος, ιδιαίτερα` | *special, particular, distinct* | ιδιαίτερα - particularly |
 | `επίσημος, επίσημη, επίσημο, επίσημα` | *formal, official* |  |
 | `χοντρός` | *fat, thick* |  |
 | `Πιθανός, Πιθανή, Πιθανό` | *possible* |  |
 | `τοπικός` | *local* |  |
-| `άσχημος` | *ugly, unattractive, bad, unpleasant* |  |
 
 
 
@@ -68,32 +68,32 @@
 
 | Article | Greek | Translation | Comment |
 | ----- | ----- | ----- | ----- |
+| *η* | `ημερομηνία` | *date* |  |
+| *η* | `σελήνη` | *moon* | (scientific) |
+| *το* | `σαββατοκύριακο` | *weekend* |  |
+| *η* | `ηλικία` | *age* | How old something is |
+| *η* | `εβδομάδα` | *week* |  |
+| *το* | `φεγγάρη` | *moon* |  |
 | *ο* | `αιώνας` | *age, era, eternity* |  |
 | *η* | `γέννηση` | *birth* |  |
 | *το* | `δωμάτιο` | *room* | (In a house) |
 | *η* | `παρασκευή` | *friday* |  |
-| *το* | `(τα) λεφτά` | *money* |  |
-| *η* | `τρίτη` | *tuesday* |  |
-| *το* | `δευτέρα` | *monday* |  |
-| *το* | `τέλος` | *end* |  |
-| *η* | `τετάρτη` | *wednesday* |  |
-| *η* | `ομίχλη` | *fog, mist* |  |
 
 
 
 ### Examples:
                 
-- `Ο 21ος αιώνας είναι ο αιώνας της τεχνολογίας`
+- `Πιοα ημερομηνία τρέχεις;`
         
-    *The 21st century is the century of technology*
+    *On which date do you run?*
                 
-- `Έχω τρία δωμάτια στο σπίτι μου`
+- `Δε δουλεύω το Σαββατοκύριακο`
         
-    *I have three rooms in my house*
+    *I don't work on the weekend*
                 
-- `Μου αρέσουν οι Παρασκευές`
+- `Σε αυτή την ηλικία, τα παιδιά μαθαίνουν γρήγορα`
         
-    *I like fridays*
+    *At this age, children learn quickly*
 
 
 ## Prepositions
