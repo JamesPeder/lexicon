@@ -3,3 +3,4 @@ resources/preview.md
 __pycache__
 database.db
 backups
+.vscode

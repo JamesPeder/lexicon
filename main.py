@@ -4,6 +4,7 @@ import json
 
 from python.markdown import render_markdown 
 from python.database import init_db, select_all_from_table, upsert_entry, delete_entry
+from python.constants import *
 
 app = Flask(__name__)
 
@@ -98,7 +99,7 @@ def list_entries():
 
 @app.route("/manage", methods=["GET"])
 def manage():
-    return render_template("manage.html")
+    return render_template(MANAGE_TEMPLATE_PATH)
 
 if __name__ == "__main__":
     init_db()

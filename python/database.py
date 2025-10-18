@@ -3,11 +3,7 @@ import os
 from typing import Dict
 
 from python.database_utils.utils import BadRequest, ensure_columns_exist, get_table_columns, quote_identifier, ensure_collision_key_unique
-
-DB_FILE = "database.db"
-DDL_SCRIPT_PATH = "sql/ddl.sql"
-COLUMNS_WITH_DEFAULT_VALUES = ['id', 'difficulty', 'created_at']
-
+from python.constants import *
 
 def init_db():
     if os.path.exists(DDL_SCRIPT_PATH):

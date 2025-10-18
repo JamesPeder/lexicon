@@ -1,18 +1,6 @@
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
-
-TEMPLATE_PATH = "resources/notebook.md"
-OUTPUT_PATH = "resources/preview.md"
-DB_FILE = "database.db"
-
-TABLES = [
-    "adverbs_adjectives",
-    "nouns",
-    "verbs",
-    "numbers",
-    "prepositions",
-    "examples"
-]
+from python.constants import *
 
 def sort_items(items, *attributes, reverse=True):
     """
