@@ -1,6 +1,11 @@
-TEMPLATE_PATH = "templates/markdown/notebook.md"
-MANAGE_TEMPLATE_PATH = "html/manage-db/manage.html"
-OUTPUT_PATH = "output/preview.md"
+# Templates
+MARKDOWN_INPUT_FOLDER_PATH= " templates/markdown/"
+MARKDOWN_OUTPUT_FOLDER_PATH = "output/"
+HTML_TEMPLATE_PATH = "templates/html/"
+MANAGE_TEMPLATE_PATH = "manage-db/manage.html"
+
+
+# Database
 DB_FILE = "resources/db/database.db"
 DDL_SCRIPT_PATH = "resources/sql/ddl.sql"
 

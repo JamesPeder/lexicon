@@ -1,4 +1,4 @@
-{%- import "resources/macros/formatting.md" as formatting -%}
+{%- import "macros/formatting.md" as formatting -%}
 
 {% macro render_table(data, attributes) -%}
     {%- if data and attributes %}

@@ -1,6 +1,7 @@
+import os
 import sqlite3
 from jinja2 import Environment, FileSystemLoader
-from python.constants import *
+from python.constants import MARKDOWN_INPUT_FOLDER_PATH, MARKDOWN_OUTPUT_FOLDER_PATH, DB_FILE, TABLES
 
 def sort_items(items, *attributes, reverse=True):
     """
@@ -30,8 +31,7 @@ def default_sort(items):
     return sort_items(items, 'difficulty', 'created_at')
 
 
-def render_markdown():
-
+def render_markdown(input_folder=MARKDOWN_INPUT_FOLDER_PATH, output_folder=MARKDOWN_OUTPUT_FOLDER_PATH):
     # 1. Fetch all tables
     all_data = {}
     with sqlite3.connect(DB_FILE) as conn:
@@ -41,30 +41,31 @@ def render_markdown():
         for table in TABLES:
             c.execute(f"SELECT * FROM {table}")
             rows = c.fetchall()
-            # Convert rows to list of dicts, replacing None with ""
-            table_data = []
-            for row in rows:
-                row_dict = {k: (v if v is not None else "") for k, v in dict(row).items()}
-                table_data.append(row_dict)
+            table_data = [{k: (v if v is not None else "") for k, v in dict(row).items()} for row in rows]
             all_data[table] = table_data
     
-    # Create separate example map for efficieny look-up
+    # Create example map for efficient lookup
     examples = {}
     for ex in all_data['examples']:
         key = (ex["table_name"], ex["word_id"])
         examples.setdefault(key, []).append(ex)
-        
+
     # 2. Set up Jinja2
-    env = Environment(loader=FileSystemLoader("."))
+    env = Environment(loader=FileSystemLoader(input_folder))
     env.filters['sort_items'] = sort_items
     env.filters['default_sort'] = default_sort
-    template = env.get_template(TEMPLATE_PATH)
 
-    # 3. Render template with all table data
-    output_md = template.render(tables=all_data, examples=examples)
+    # 3. Ensure output folder exists
+    os.makedirs(output_folder, exist_ok=True)
 
-    # 4. Write output
-    with open(OUTPUT_PATH, "w") as f:
-        f.write(output_md)
+    # 4. Iterate over all markdown files in the input folder
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".md"):
+            template = env.get_template(filename)
+            rendered = template.render(tables=all_data, examples=examples)
 
-    print(f"✅ Markdown file generated: {OUTPUT_PATH}")
+            output_path = os.path.join(output_folder, filename)
+            with open(output_path, "w", encoding="utf-8") as f:
+                f.write(rendered)
+
+            print(f"✅ Markdown file generated: {output_path}")

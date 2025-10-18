@@ -4,9 +4,9 @@ import json
 
 from python.markdown import render_markdown 
 from python.database import init_db, select_all_from_table, upsert_entry, delete_entry
-from python.constants import *
+from python.constants import MANAGE_TEMPLATE_PATH, HTML_TEMPLATE_PATH
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=HTML_TEMPLATE_PATH)
 
 def handle_delete_operation(table_name, collision_key, data):
     
